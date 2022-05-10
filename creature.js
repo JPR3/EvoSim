@@ -32,8 +32,18 @@ class Creature extends Organism{
             x: Math.cos(this.angle) * 2,
             y: Math.sin(this.angle) * 2
         };
+        this.target = null;
     }
     update(){
+        
+        if(this.target === null && organisms.length > 1){
+            let orgs = [...organisms];
+            orgs.splice(orgs.indexOf(this), 1);
+            const ind = Math.trunc(Math.random() * orgs.length);
+            this.target = orgs[ind];
+            console.log(this.target);
+        }
+        
         this.x = this.x + this.velocity.x;
         this.y = this.y + this.velocity.y;
         if(this.x - this.radius < 0 || this.x + this.radius > canvas.width){
