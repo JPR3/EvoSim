@@ -13,3 +13,15 @@ class Organism{
         ctx.fill();
     }
 }
+
+class Plant extends Organism{
+    constructor(x, y, radius, color){
+        super(x,y,radius,color);
+    }
+}
+
+class Creature extends Organism{
+    constructor(x, y, radius, color){
+        super(x,y,radius,color);
+    }
+}
