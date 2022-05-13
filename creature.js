@@ -37,19 +37,6 @@ class Creature extends Organism{
         };
         this.target = null;
     }
-    draw(){
-        super.draw();
-        //Draw direction indicator
-        ctx.beginPath();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle)
-        ctx.translate(-this.x, -this.y);
-        ctx.rect(this.x, this.y - 2, this.radius, 4);
-        ctx.fillStyle = 'red';
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.fill();
-        
-    }
     update(){
         //Assign a new target (change to use targeting params)
         if(this.target === null && organisms.length > 1){
