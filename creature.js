@@ -26,16 +26,29 @@ class Plant extends Organism{
 class Creature extends Organism{
     constructor(x, y, radius, color){
         super(x,y,radius,color);
-        //Generate a random angle (change later?)
-        this.angle = Math.atan2(Math.random() * 2 - 1, Math.random() * 2 - 1);
+        //Generate a random angle
+        this.angle = Math.random() * Math.PI * 2
         this.velocity = {
             x: Math.cos(this.angle) * 2,
             y: Math.sin(this.angle) * 2
         };
         this.target = null;
     }
-    update(){
+    draw(){
+        super.draw();
+        //Draw direction indicator
+        ctx.beginPath();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle - Math.PI / 2)
+        ctx.translate(-this.x, -this.y);
+        ctx.rect(this.x - 2, this.y, 4, this.radius);
+        ctx.fillStyle = 'red';
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.fill();
         
+    }
+    update(){
+        //Assign a new target (change to use targeting params)
         if(this.target === null && organisms.length > 1){
             let orgs = [...organisms];
             orgs.splice(orgs.indexOf(this), 1);
@@ -43,7 +56,7 @@ class Creature extends Organism{
             this.target = orgs[ind];
             console.log(this.target);
         }
-        
+        //Move, and bounce off walls if necessary
         this.x = this.x + this.velocity.x;
         this.y = this.y + this.velocity.y;
         if(this.x - this.radius < 0 || this.x + this.radius > canvas.width){
@@ -51,6 +64,7 @@ class Creature extends Organism{
                 x: -this.velocity.x,
                 y: this.velocity.y
             };
+            
         }
         if(this.y - this.radius < 0 || this.y + this.radius > canvas.height){
             this.velocity = {
