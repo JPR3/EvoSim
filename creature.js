@@ -45,17 +45,12 @@ class Creature extends Organism{
             this.target = orgs[ind];
             console.log(this.target);
         }
-        if(this.targetAngle < 0){
-            this.targetAngle += Math.PI * 2
+        //Fix angles if they are out of bounds
+        if(this.targetAngle > Math.PI * 2 || this.targetAngle < 0){
+            this.targetAngle = floatSafeRemainder(this.targetAngle, Math.PI * 2);
         }
-        else if(this.targetAngle > Math.PI * 2){
-            this.targetAngle -= Math.PI * 2
-        }
-        while(this.angle > Math.PI * 2){
-            this.angle -= Math.PI * 2;
-        }
-        while(this.angle < 0){
-            this.angle += Math.PI * 2;
+        if(this.angle > Math.PI * 2 || this.angle < 0){
+            this.angle = floatSafeRemainder(this.angle, Math.PI * 2);
         }
         //Move, and turn if necessary
         if(this.angle != this.targetAngle){
@@ -121,3 +116,15 @@ class Creature extends Organism{
 function roundToTwo(num) {
     return +(Math.round(num + "e+2")  + "e-2");
 }
+function floatSafeRemainder(val, step){
+    var valDecCount = (val.toString().split('.')[1] || '').length;
+    var stepDecCount = (step.toString().split('.')[1] || '').length;
+    var decCount = valDecCount > stepDecCount? valDecCount : stepDecCount;
+    var valInt = parseInt(val.toFixed(decCount).replace('.',''));
+    var stepInt = parseInt(step.toFixed(decCount).replace('.',''));
+    var output = (valInt % stepInt) / Math.pow(10, decCount);
+    if(val < 0){
+        output += Math.PI * 2;
+    }
+    return output;
+  }
