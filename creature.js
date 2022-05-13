@@ -27,8 +27,7 @@ class Creature extends Organism{
     constructor(x, y, radius, color){
         super(x,y,radius,color);
         //Generate a random angle
-        //this.angle = Math.random() * Math.PI * 2
-        this.angle = Math.PI / 4
+        this.angle = Math.random() * Math.PI * 2
         this.targetAngle = this.angle;
         this.angleInc = 0;
         this.velocity = {
