@@ -27,7 +27,10 @@ class Creature extends Organism{
     constructor(x, y, radius, color){
         super(x,y,radius,color);
         //Generate a random angle
-        this.angle = Math.random() * Math.PI * 2
+        //this.angle = Math.random() * Math.PI * 2
+        this.angle = Math.PI / 4
+        this.targetAngle = this.angle;
+        this.angleInc = 0;
         this.velocity = {
             x: Math.cos(this.angle) * 2,
             y: Math.sin(this.angle) * 2
@@ -39,9 +42,9 @@ class Creature extends Organism{
         //Draw direction indicator
         ctx.beginPath();
         ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle - Math.PI / 2)
+        ctx.rotate(this.angle)
         ctx.translate(-this.x, -this.y);
-        ctx.rect(this.x - 2, this.y, 4, this.radius);
+        ctx.rect(this.x, this.y - 2, this.radius, 4);
         ctx.fillStyle = 'red';
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fill();
@@ -56,22 +59,79 @@ class Creature extends Organism{
             this.target = orgs[ind];
             console.log(this.target);
         }
-        //Move, and bounce off walls if necessary
+        if(this.targetAngle < 0){
+            this.targetAngle += Math.PI * 2
+        }
+        else if(this.targetAngle > Math.PI * 2){
+            this.targetAngle -= Math.PI * 2
+        }
+        while(this.angle > Math.PI * 2){
+            this.angle -= Math.PI * 2;
+        }
+        while(this.angle < 0){
+            this.angle += Math.PI * 2;
+        }
+        //Move, and turn if necessary
+        if(this.angle != this.targetAngle){
+            if(this.targetAngle > this.angle){
+                if(this.targetAngle - this.angle < Math.PI * 2 - (this.targetAngle - this.angle)){
+                    this.angle += this.angleInc;
+                }
+                else{
+                    this.angle -= this.angleInc;
+                }
+            }
+            else{
+                if(this.angle - this.targetAngle < Math.PI * 2 - (this.angle - this.targetAngle)){
+                    this.angle -= this.angleInc;
+                }
+                else{
+                    this.angle += this.angleInc;
+                }
+                
+            }
+            
+            this.velocity = {
+                x: Math.cos(this.angle) * 2,
+                y: Math.sin(this.angle) * 2
+            };
+            if(Math.abs(this.angle - this.targetAngle) < 1 && !this.isNearEdge()){
+                this.angle = this.targetAngle;
+            }
+        }
         this.x = this.x + this.velocity.x;
         this.y = this.y + this.velocity.y;
-        if(this.x - this.radius < 0 || this.x + this.radius > canvas.width){
-            this.velocity = {
-                x: -this.velocity.x,
-                y: this.velocity.y
-            };
-            
+        if(this.x - this.radius - 50 < 0 || this.x + this.radius + 50 > canvas.width){
+            if(this.angle === this.targetAngle){
+                //Generate a new target angle
+                if(this.velocity.x < 0){
+                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) - (Math.PI / 2 - Math.PI / 6);
+                }
+                else{
+                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + (Math.PI / 2 + Math.PI / 6);
+                }
+                
+                this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+            }
         }
-        if(this.y - this.radius < 0 || this.y + this.radius > canvas.height){
-            this.velocity = {
-                x: this.velocity.x,
-                y: -this.velocity.y
-            };
+        if(this.y - this.radius - 50 < 0 || this.y + this.radius + 50 > canvas.height){
+            if(this.angle === this.targetAngle){
+                //Generate a new target angle
+                if(this.velocity.y < 0){
+                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI / 6;
+                }
+                else{
+                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI + Math.PI / 6;
+                }
+                this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+            }
         }
         this.draw();
     }
+    isNearEdge(){
+        return this.y - this.radius - 50 < 0 || this.y + this.radius + 50 > canvas.height || this.x - this.radius - 50 < 0 || this.x + this.radius + 50 > canvas.width;
+    }
+}
+function roundToTwo(num) {
+    return +(Math.round(num + "e+2")  + "e-2");
 }
