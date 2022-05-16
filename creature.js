@@ -82,31 +82,53 @@ class Creature extends Organism{
         }
         this.x = this.x + this.velocity.x;
         this.y = this.y + this.velocity.y;
-        if(this.x - this.radius - 50 < 0 || this.x + this.radius + 50 > canvas.width){
-            if(this.angle === this.targetAngle){
-                //Generate a new target angle
-                if(this.velocity.x < 0){
-                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) - (Math.PI / 2 - Math.PI / 6);
-                }
-                else{
-                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + (Math.PI / 2 + Math.PI / 6);
-                }
-                
-                this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+        //Bounce off walls if required
+        if(this.x - this.radius < 0 || this.x + this.radius > canvas.width){
+            if(this.velocity.x < 0){
+                this.angle = Math.random() * (Math.PI - Math.PI / 3) - (Math.PI / 2 - Math.PI / 6);
+                this.targetAngle = this.angle;
             }
-        }
-        if(this.y - this.radius - 50 < 0 || this.y + this.radius + 50 > canvas.height){
-            if(this.angle === this.targetAngle){
-                //Generate a new target angle
-                if(this.velocity.y < 0){
-                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI / 6;
-                }
-                else{
-                    this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI + Math.PI / 6;
-                }
-                this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+            else{
+                this.angle = Math.random() * (Math.PI - Math.PI / 3) + (Math.PI / 2 + Math.PI / 6);
+                this.targetAngle = this.angle;
             }
+            this.velocity = {
+                x: Math.cos(this.angle) * 2,
+                y: Math.sin(this.angle) * 2
+            };
         }
+        else if(this.y - this.radius < 0 || this.y + this.radius > canvas.height){
+            if(this.velocity.y < 0){
+                this.angle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI / 6;
+                this.targetAngle = this.angle;
+            }
+            else{
+                this.angle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI + Math.PI / 6;
+                this.targetAngle = this.angle;
+            }
+            this.velocity = {
+                x: Math.cos(this.angle) * 2,
+                y: Math.sin(this.angle) * 2
+            };
+        }
+        //Smooth rotations
+        
+        else if(this.angle === this.targetAngle){
+            if(this.x - this.radius - 50 < 0 && this.velocity.x < 0){
+                this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) - (Math.PI / 2 - Math.PI / 6);
+            }
+            else if(this.x + this.radius + 50 > canvas.width && this.velocity.x > 0){
+                this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + (Math.PI / 2 + Math.PI / 6);
+            }
+            else if(this.y - this.radius - 50 < 0 && this.velocity.y < 0){
+                this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI / 6;
+            }
+            else if(this.y + this.radius + 50 > canvas.height && this.velocity.y > 0){
+                this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI + Math.PI / 6;
+            }
+            this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+        }
+        
         this.draw();
     }
     isNearEdge(){
