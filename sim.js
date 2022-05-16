@@ -6,12 +6,11 @@ canvas.height = innerHeight;
 
 let organisms = []
 for(let i = 0; i < 1; i++){
-    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white');
+    //cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white');
+    cre1 = new Creature(canvas.width / 2, canvas.height / 2, 10, 'white');
     organisms.push(cre1);
 }
 
-pl1 = new Plant(canvas.width / 2 + 100, canvas.height / 2 + 100, 15, 'green');
-organisms.push(pl1);
 
 function animate(){
     requestAnimationFrame(animate);
