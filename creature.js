@@ -47,10 +47,7 @@ class Creature extends Organism{
             this.target = orgs[ind];
             console.log(this.target);
             this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            console.log(this.angle);
-            console.log(this.targetAngle)
             this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
-            console.log(this.angleInc);
         }
         //Fix angles if they are out of bounds
         if(this.targetAngle > Math.PI * 2 || this.targetAngle < 0){
