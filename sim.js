@@ -5,8 +5,8 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 let organisms = []
-for(let i = 0; i < 1; i++){
-    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white');
+for(let i = 0; i < 20; i++){
+    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white', 100);
     organisms.push(cre1);
 }
 
@@ -20,7 +20,7 @@ function animate(){
     });
 }
 addEventListener('click', (event) => {
-    plnt = new Plant(event.clientX, event.clientY, 15, 'green');
+    plnt = new Plant(event.clientX, event.clientY, 15, 'green', 100);
     console.log(plnt);
     organisms.push(plnt);
 })

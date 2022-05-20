@@ -1,9 +1,11 @@
 class Organism{
-    constructor(x, y, radius, color){
+    constructor(x, y, radius, color, energy){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
+        this.energy = energy;
+        this.targetedBy = [];
     }
 
     draw(){
@@ -15,20 +17,25 @@ class Organism{
     update(){
         this.draw();
     }
+    kill(){
+        organisms.splice(organisms.indexOf(this), 1);
+        this.targetedBy.forEach((other) => {
+            other.target = null;
+        });
+    }
 }
 
 class Plant extends Organism{
-    constructor(x, y, radius, color){
-        super(x,y,radius,color);
+    constructor(x, y, radius, color, energy){
+        super(x,y,radius,color, energy);
     }
 }
 
 class Creature extends Organism{
-    constructor(x, y, radius, color){
-        super(x,y,radius,color);
+    constructor(x, y, radius, color, energy){
+        super(x,y,radius,color, energy);
         //Generate a random angle
-        //this.angle = Math.random() * Math.PI * 2
-        this.angle = 0;
+        this.angle = Math.random() * Math.PI * 2
         this.targetAngle = this.angle;
         this.angleInc = 0;
         this.velocity = {
@@ -38,14 +45,13 @@ class Creature extends Organism{
         this.target = null;
     }
     update(){
-        
         //Assign a new target (change to use targeting params)
         if(this.target === null && organisms.length > 1){
             let orgs = [...organisms];
             orgs.splice(orgs.indexOf(this), 1);
             const ind = Math.trunc(Math.random() * orgs.length);
             this.target = orgs[ind];
-            console.log(this.target);
+            this.target.targetedBy.push(this);
             this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
             this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
         }
@@ -75,14 +81,13 @@ class Creature extends Organism{
                 }
                 
             }
-            //Move
+            //Update velocity
             this.velocity = {
                 x: Math.cos(this.angle) * 2,
                 y: Math.sin(this.angle) * 2
             };
+            
             if(Math.abs(this.angle - this.targetAngle) < .1 && !this.isNearEdge() && this.target === null){
-                console.log("Stopping")
-                console.log(this.angle - this.targetAngle);
                 this.angle = this.targetAngle;
             }
             //Handle targets
@@ -90,8 +95,8 @@ class Creature extends Organism{
                 //Check for touching a target
                 const dist = Math.hypot(this.x - this.target.x, this.y - this.target.y);
                 if(dist - this.target.radius - this.radius < 1){
-                    organisms.splice(organisms.indexOf(this.target), 1);
-                    this.target = null;
+                    this.energy += this.target.energy;
+                    this.target.kill();
                 }
                 //Turn towards targets
                 else{
@@ -110,8 +115,13 @@ class Creature extends Organism{
             }
             
         }
+        //Step
         this.x = this.x + this.velocity.x;
         this.y = this.y + this.velocity.y;
+        this.energy -= 0.075
+        if(this.energy <= 0){
+            this.kill();
+        }
         //Bounce off walls if required
         if(this.x - this.radius < 0 || this.x + this.radius > canvas.width){
             if(this.velocity.x < 0){
