@@ -50,10 +50,14 @@ class Creature extends Organism{
             let orgs = [...organisms];
             orgs.splice(orgs.indexOf(this), 1);
             const ind = Math.trunc(Math.random() * orgs.length);
-            this.target = orgs[ind];
-            this.target.targetedBy.push(this);
-            this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+            //Remove later
+            if(orgs[ind] instanceof Plant){
+                this.target = orgs[ind];
+                this.target.targetedBy.push(this);
+                this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+                this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+            }
+            
         }
         //Fix angles if they are out of bounds
         if(this.targetAngle > Math.PI * 2 || this.targetAngle < 0){
@@ -152,8 +156,8 @@ class Creature extends Organism{
             };
         }
         //Smooth rotations
-        
         else if(this.angle === this.targetAngle){
+            //Rotate away from walls
             if(this.x - this.radius - 50 < 0 && this.velocity.x < 0){
                 this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) - (Math.PI / 2 - Math.PI / 6);
             }
@@ -166,9 +170,12 @@ class Creature extends Organism{
             else if(this.y + this.radius + 50 > canvas.height && this.velocity.y > 0){
                 this.targetAngle = Math.random() * (Math.PI - Math.PI / 3) + Math.PI + Math.PI / 6;
             }
+            //Random turning around
+            else if(Math.trunc(Math.random() * 175) === 42){
+                this.targetAngle = Math.random() * Math.PI * 2;
+            }
             this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
         }
-        
         this.draw();
     }
     isNearEdge(){
