@@ -56,23 +56,23 @@ class Creature extends Organism{
     }
     findTarget(orgs){
         orgs.splice(orgs.indexOf(this), 1);
-        let validOrgs = [];
+        let closest = {
+            distance: this.dThresh,
+            org: null
+        }
         for(let i in orgs){
             let dist = Math.hypot(this.x - orgs[i].x, this.y - orgs[i].y);
-            if(orgs[i].ferocity < this.fThresh && dist < this.dThresh){
-                validOrgs.push(orgs[i]);
+            if(orgs[i].ferocity < this.fThresh && dist < this.dThresh && dist < closest.distance){
+                closest = {
+                    distance: dist,
+                    org: orgs[i]
+                }
             }
         }
-        if(validOrgs.length === 0){
-            console.log("here")
+        if(closest.org === null){
             return;
         }
-        let ind = Math.trunc(Math.random() * validOrgs.length);
-        this.target = validOrgs[ind];
-        if(this.target === undefined){
-            console.log(validOrgs);
-            console.log(ind)
-        }
+        this.target = closest.org;
         this.target.targetedBy.push(this);
         this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
         this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
