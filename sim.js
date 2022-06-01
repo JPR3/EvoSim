@@ -1,3 +1,8 @@
+/* 
+    Plans:
+        -Adjust target picking system not to brute force a valid target every frame
+        -Switch targets after spening too long on one
+*/
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -6,7 +11,7 @@ canvas.height = innerHeight;
 
 let organisms = []
 for(let i = 0; i < 20; i++){
-    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white', 100);
+    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white', 200, 1, 20, 25, 125, 30, 1000, 1750);
     organisms.push(cre1);
 }
 

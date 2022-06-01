@@ -1,11 +1,12 @@
 class Organism{
-    constructor(x, y, radius, color, energy){
+    constructor(x, y, radius, color, energy, ferocity){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
         this.energy = energy;
         this.targetedBy = [];
+        this.ferocity = ferocity;
     }
 
     draw(){
@@ -27,13 +28,13 @@ class Organism{
 
 class Plant extends Organism{
     constructor(x, y, radius, color, energy){
-        super(x,y,radius,color, energy);
+        super(x,y,radius,color, energy, 0);
     }
 }
 
 class Creature extends Organism{
-    constructor(x, y, radius, color, energy){
-        super(x,y,radius,color, energy);
+    constructor(x, y, radius, color, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh){
+        super(x,y,radius,color, energy, ferocity);
         //Generate a random angle
         this.angle = Math.random() * Math.PI * 2
         this.targetAngle = this.angle;
@@ -43,15 +44,32 @@ class Creature extends Organism{
             y: Math.sin(this.angle) * 2
         };
         this.target = null;
+        this.speed = speed;
+        this.health = health;
+        this.eThresh = eThresh; //Energy threshold for creating child
+        this.fThresh = fThresh; //Ferocity threshold to avoid attacking
+        this.dThresh = dThresh; //Distance threshold for possible targets
+        this.hThresh = this.energy * .75; //Threshold for when to seek target based on energy levels
+        this.sThresh = sThresh; //Steps threshold of when to begin seeking reproduction
+        this.steps = 0;
+        this.reproducing = false;
     }
     update(){
-        //Assign a new target (change to use targeting params)
-        if(this.target === null && organisms.length > 1){
+        //Reproduction
+        if(this.energy >= this.eThresh * 2 && this.steps >= this.sThresh){
+            this.steps = 0;
+            console.log("Creating child")
+            this.energy -= this.hThresh;
+        }
+        //Assign a new target
+        if(this.target === null && organisms.length > 1 && (this.energy <= this.hThresh || this.steps >= this.sThresh)){
             let orgs = [...organisms];
             orgs.splice(orgs.indexOf(this), 1);
             const ind = Math.trunc(Math.random() * orgs.length);
             //Remove later
-            if(orgs[ind] instanceof Plant){
+            const potential = orgs[ind];
+            const dist = Math.hypot(this.x - potential.x, this.y - potential.y);
+            if(potential.ferocity < this.fThresh && dist < this.dThresh){
                 this.target = orgs[ind];
                 this.target.targetedBy.push(this);
                 this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
@@ -120,12 +138,13 @@ class Creature extends Organism{
             
         }
         //Step
-        this.x = this.x + this.velocity.x;
-        this.y = this.y + this.velocity.y;
+        this.x = this.x + this.velocity.x * this.speed;
+        this.y = this.y + this.velocity.y * this.speed;
         this.energy -= 0.075
         if(this.energy <= 0){
             this.kill();
         }
+        this.steps += 1;
         //Bounce off walls if required
         if(this.x - this.radius < 0 || this.x + this.radius > canvas.width){
             if(this.velocity.x < 0){
