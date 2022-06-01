@@ -56,16 +56,28 @@ class Creature extends Organism{
     }
     findTarget(orgs){
         orgs.splice(orgs.indexOf(this), 1);
-        const ind = Math.trunc(Math.random() * orgs.length);
-        const potential = orgs[ind];
-        const dist = Math.hypot(this.x - potential.x, this.y - potential.y);
-        if(potential.ferocity < this.fThresh && dist < this.dThresh){
-            this.target = orgs[ind];
-            this.target.targetedBy.push(this);
-            this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
-            this.targetedAt = Date.now();
+        let validOrgs = [];
+        for(let i in orgs){
+            let dist = Math.hypot(this.x - orgs[i].x, this.y - orgs[i].y);
+            if(orgs[i].ferocity < this.fThresh && dist < this.dThresh){
+                validOrgs.push(orgs[i]);
+            }
         }
+        if(validOrgs.length === 0){
+            console.log("here")
+            return;
+        }
+        let ind = Math.trunc(Math.random() * validOrgs.length);
+        this.target = validOrgs[ind];
+        if(this.target === undefined){
+            console.log(validOrgs);
+            console.log(ind)
+        }
+        this.target.targetedBy.push(this);
+        this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+        this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+        this.targetedAt = Date.now();
+        
     }
     update(){
         //Reproduction

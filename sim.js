@@ -26,7 +26,6 @@ function animate(){
 }
 addEventListener('click', (event) => {
     plnt = new Plant(event.clientX, event.clientY, 15, 'green', 100);
-    console.log(plnt);
     organisms.push(plnt);
 })
 animate();
