@@ -54,6 +54,19 @@ class Creature extends Organism{
         this.steps = 0;
         this.reproducing = false;
     }
+    findTarget(orgs){
+        orgs.splice(orgs.indexOf(this), 1);
+        const ind = Math.trunc(Math.random() * orgs.length);
+        const potential = orgs[ind];
+        const dist = Math.hypot(this.x - potential.x, this.y - potential.y);
+        if(potential.ferocity < this.fThresh && dist < this.dThresh){
+            this.target = orgs[ind];
+            this.target.targetedBy.push(this);
+            this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+            this.targetedAt = Date.now();
+        }
+    }
     update(){
         //Reproduction
         if(this.energy >= this.eThresh * 2 && this.steps >= this.sThresh){
@@ -64,16 +77,34 @@ class Creature extends Organism{
         //Assign a new target
         if(this.target === null && organisms.length > 1 && (this.energy <= this.hThresh || this.steps >= this.sThresh)){
             let orgs = [...organisms];
-            orgs.splice(orgs.indexOf(this), 1);
-            const ind = Math.trunc(Math.random() * orgs.length);
-            //Remove later
-            const potential = orgs[ind];
-            const dist = Math.hypot(this.x - potential.x, this.y - potential.y);
-            if(potential.ferocity < this.fThresh && dist < this.dThresh){
-                this.target = orgs[ind];
-                this.target.targetedBy.push(this);
-                this.targetAngle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-                this.angleInc = Math.abs(this.angle - this.targetAngle) / 40;
+            this.findTarget(orgs);
+        }
+        else if(this.target != null){
+            //Check for touching a target
+            const dist = Math.hypot(this.x - this.target.x, this.y - this.target.y);
+            if(dist - this.target.radius - this.radius < 1){
+                this.energy += this.target.energy;
+                this.target.kill();
+            }
+            //Check for chasing target too long
+            else if(Date.now() - this.targetedAt > 10000 && organisms.length > 1){
+                console.log("Switching targets");
+                let orgs = [...organisms];
+                orgs.splice(orgs.indexOf(this.target), 1);
+                this.findTarget(orgs);
+            }
+            //Turn towards targets
+            else{
+                let idealAngle = Math.atan(((this.y - this.target.y) / (this.x - this.target.x)))
+                if(this.target.x < this.x){
+                    idealAngle -= Math.PI;
+                }
+                if(Math.abs(this.angle - idealAngle) < .1){
+                    this.angle = idealAngle;
+                }
+                else{
+                    this.targetAngle = idealAngle;
+                }
             }
             
         }
@@ -112,6 +143,7 @@ class Creature extends Organism{
             if(Math.abs(this.angle - this.targetAngle) < .1 && !this.isNearEdge() && this.target === null){
                 this.angle = this.targetAngle;
             }
+            /*
             //Handle targets
             else if(this.target != null){
                 //Check for touching a target
@@ -135,6 +167,7 @@ class Creature extends Organism{
                 }
                 
             }
+            */
             
         }
         //Step

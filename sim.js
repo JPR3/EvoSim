@@ -10,7 +10,7 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 let organisms = []
-for(let i = 0; i < 20; i++){
+for(let i = 0; i < 1; i++){
     cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white', 200, 1, 20, 25, 125, 30, 1000, 1750);
     organisms.push(cre1);
 }
