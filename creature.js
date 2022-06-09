@@ -33,7 +33,8 @@ class Plant extends Organism{
 }
 
 class Creature extends Organism{
-    constructor(x, y, radius, color, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh){
+    constructor(x, y, radius, color, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent){
+        console.log("I'm alive!")
         super(x,y,radius,color, energy, ferocity);
         //Generate a random angle
         this.angle = Math.random() * Math.PI * 2
@@ -49,10 +50,14 @@ class Creature extends Organism{
         this.eThresh = eThresh; //Energy threshold for creating child
         this.fThresh = fThresh; //Ferocity threshold to avoid attacking
         this.dThresh = dThresh; //Distance threshold for possible targets
-        this.hThresh = this.energy * .75; //Threshold for when to seek target based on energy levels
+        this.hThresh = hThresh; //Threshold for when to seek target based on energy levels
         this.sThresh = sThresh; //Steps threshold of when to begin seeking reproduction
         this.steps = 0;
         this.reproducing = false;
+        this.family = []
+        if(parent != null){
+            this.family.push(parent);
+        }
     }
     findTarget(orgs){
         orgs.splice(orgs.indexOf(this), 1);
@@ -62,7 +67,7 @@ class Creature extends Organism{
         }
         for(let i in orgs){
             let dist = Math.hypot(this.x - orgs[i].x, this.y - orgs[i].y);
-            if(orgs[i].ferocity < this.fThresh && dist < this.dThresh && dist < closest.distance){
+            if(this.family.indexOf(orgs[i]) === -1 && orgs[i].ferocity < this.fThresh && dist < this.dThresh && dist < closest.distance){
                 closest = {
                     distance: dist,
                     org: orgs[i]
@@ -82,8 +87,12 @@ class Creature extends Organism{
     update(){
         //Reproduction
         if(this.energy >= this.eThresh * 2 && this.steps >= this.sThresh){
+            console.log("Creating child");
             this.steps = 0;
-            console.log("Creating child")
+            const child = new Creature(this.x, this.y, 10, 'white', this.hThresh, this.speed, this.health, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
+            this.family.push(child);
+            organisms.push(child);
+            console.log(organisms)
             this.energy -= this.hThresh;
         }
         //Assign a new target
@@ -155,31 +164,6 @@ class Creature extends Organism{
             if(Math.abs(this.angle - this.targetAngle) < .1 && !this.isNearEdge() && this.target === null){
                 this.angle = this.targetAngle;
             }
-            /*
-            //Handle targets
-            else if(this.target != null){
-                //Check for touching a target
-                const dist = Math.hypot(this.x - this.target.x, this.y - this.target.y);
-                if(dist - this.target.radius - this.radius < 1){
-                    this.energy += this.target.energy;
-                    this.target.kill();
-                }
-                //Turn towards targets
-                else{
-                    let idealAngle = Math.atan(((this.y - this.target.y) / (this.x - this.target.x)))
-                    if(this.target.x < this.x){
-                        idealAngle -= Math.PI;
-                    }
-                    if(Math.abs(this.angle - idealAngle) < .1){
-                        this.angle = idealAngle;
-                    }
-                    else{
-                        this.targetAngle = idealAngle;
-                    }
-                }
-                
-            }
-            */
             
         }
         //Step
