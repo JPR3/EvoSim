@@ -34,7 +34,6 @@ class Plant extends Organism{
 
 class Creature extends Organism{
     constructor(x, y, radius, color, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent){
-        console.log("I'm alive!")
         super(x,y,radius,color, energy, ferocity);
         //Generate a random angle
         this.angle = Math.random() * Math.PI * 2
@@ -87,7 +86,6 @@ class Creature extends Organism{
     update(){
         //Reproduction
         if(this.energy >= this.eThresh * 2 && this.steps >= this.sThresh){
-            console.log("Creating child");
             this.steps = 0;
             const child = new Creature(this.x, this.y, 10, 'white', this.hThresh, this.speed, this.health, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
             this.family.push(child);
