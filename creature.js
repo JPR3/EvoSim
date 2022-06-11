@@ -90,7 +90,6 @@ class Creature extends Organism{
             const child = new Creature(this.x, this.y, 10, 'white', this.hThresh, this.speed, this.health, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
             this.family.push(child);
             organisms.push(child);
-            console.log(organisms)
             this.energy -= this.hThresh;
         }
         //Assign a new target

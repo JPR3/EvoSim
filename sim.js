@@ -9,9 +9,9 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 let organisms = []
-for(let i = 0; i < 50; i++){
+for(let i = 0; i < 35; i++){
     cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white', 200, 1, 20, 25, 125, 30, 1000, 1750, 150);
-    pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 15, 'green', 100);
+    pl1 = new Plant(Math.random() * (canvas.width - canvas.width / 4.5) + canvas.width / 9, Math.random() * (canvas.height - canvas.height / 4.5) + canvas.height / 9, 15, 'green', 100);
     organisms.push(pl1);
     organisms.push(cre1);
 }
@@ -24,7 +24,7 @@ function animate(){
     organisms.forEach(org => {
         org.update();
     });
-    if(Math.trunc(Math.random() * 100) === 49){
+    if(Math.trunc(Math.random() * 80) === 17){
         pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 15, 'green', 100);
         organisms.push(pl1)
     }
