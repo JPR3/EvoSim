@@ -87,7 +87,14 @@ class Creature extends Organism{
         //Reproduction
         if(this.energy >= this.eThresh * 2 && this.steps >= this.sThresh){
             this.steps = 0;
-            const child = new Creature(this.x, this.y, 10, this.hThresh, this.speed, this.health, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
+            let child;
+            if(Math.trunc(Math.random() * 25) === 18){
+                console.log("Mutating")
+                child = this.generateMutation(Math.trunc(Math.random() * 8));
+            }
+            else{
+                child = new Creature(this.x, this.y, 10, this.hThresh, this.speed, this.health, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
+            }
             this.family.push(child);
             organisms.push(child);
             this.energy -= this.hThresh;
@@ -225,6 +232,46 @@ class Creature extends Organism{
     }
     isNearEdge(){
         return this.y - this.radius - 50 < 0 || this.y + this.radius + 50 > canvas.height || this.x - this.radius - 50 < 0 || this.x + this.radius + 50 > canvas.width;
+    }
+    generateMutation(num){
+        let l_ferocity = this.ferocity;
+        let l_speed = this.speed;
+        let l_health = this.health;
+        let l_eThresh = this.eThresh; 
+        let l_fThresh = this.fThresh;
+        let l_dThresh = this.dThresh; 
+        let l_hThresh = this.hThresh;
+        let l_sThresh = this.sThresh;
+        switch(num) {
+            case 0:
+                l_speed = randRange(this.speed, .25);
+                break;
+            case 1:
+                l_health = randRange(this.health, 5);
+                break;
+            case 2:
+                l_ferocity = randRange(this.ferocity, 5);
+                break;
+            case 3:
+                l_eThresh = randRange(this.eThresh, 25);
+                break;
+            case 4:
+                l_fThresh = randRange(this.fThresh, 5);
+                break;
+            case 5:
+                l_dThresh = randRange(this.dThresh, 100);
+                break;
+            case 6:
+                l_sThresh = randRange(this.sThresh, 250);
+                break;
+            case 7:
+                l_hThresh = randRange(this.hThresh, 25);
+                break;
+            default:
+                console.log("Invalid mutation input")
+                break;
+        }
+        return new Creature(this.x, this.y, 10, this.hThresh, l_speed, l_health, l_ferocity, l_eThresh, l_fThresh, l_dThresh, l_sThresh, l_hThresh, this);
     }
 }
 function roundToTwo(num) {
