@@ -7,10 +7,21 @@ const ctx = canvas.getContext('2d');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-
+function randRange(middle, deviation){
+    const numStr = String(deviation);
+    let multNum = 1;
+    if (numStr.includes('.')) {
+        multNum = numStr.split('.')[1].length * 10;
+    };
+    middle *= multNum;
+    deviation *= multNum;
+    return (Math.trunc((Math.random() * deviation * 2) + 1) + middle - deviation) / multNum
+}
 let organisms = []
-for(let i = 0; i < 35; i++){
-    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 'white', 200, 1, 20, 25, 125, 30, 1000, 1750, 150);
+for(let i = 0; i < 100; i++){
+    //cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 200, 1, 20, 25, 125, 30, 1000, 1750, 150);
+    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, randRange(200, 25), randRange(1.5, .5), 
+        randRange(20, 10), randRange(25, 5), randRange(125, 50), randRange(30, 10), randRange(1000, 200), randRange(1750, 500), randRange(150, 50));
     pl1 = new Plant(Math.random() * (canvas.width - canvas.width / 4.5) + canvas.width / 9, Math.random() * (canvas.height - canvas.height / 4.5) + canvas.height / 9, 15, 'green', 100);
     organisms.push(pl1);
     organisms.push(cre1);
