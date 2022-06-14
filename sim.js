@@ -19,6 +19,7 @@ function randRange(middle, deviation){
 }
 let organisms = []
 for(let i = 0; i < 100; i++){
+    //x, y, radius, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent
     //cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 200, 1, 20, 25, 125, 30, 1000, 1750, 150);
     cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, randRange(200, 25), randRange(1.5, .5), 
         randRange(20, 10), randRange(25, 5), randRange(125, 50), randRange(30, 10), randRange(1000, 200), randRange(1750, 500), randRange(150, 50));
@@ -26,8 +27,6 @@ for(let i = 0; i < 100; i++){
     organisms.push(pl1);
     organisms.push(cre1);
 }
-
-
 function animate(){
     requestAnimationFrame(animate);
     ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';

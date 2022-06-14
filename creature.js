@@ -34,7 +34,8 @@ class Plant extends Organism{
 
 class Creature extends Organism{
     constructor(x, y, radius, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent){
-        super(x,y,radius,'white', energy, ferocity);
+        super(x,y,radius,calcColor(speed, health, ferocity), energy, ferocity);
+        console.log("My color is " + this.color)
         //Generate a random angle
         this.angle = Math.random() * Math.PI * 2
         this.targetAngle = this.angle;
@@ -288,4 +289,16 @@ function floatSafeRemainder(val, step){
         output += Math.PI * 2;
     }
     return output;
-  }
+}
+function calcColor(s, h, f){
+    //This SHOULD, in theory, make things even in weight despite the different scales
+    //Multiplies things so that their default values would all be equivalent to 150 
+    s *= 100;
+    h *= 7.5;
+    f *= 6;
+    const totalPoints = s + h + f;
+    const rVal = Math.round(((totalPoints - h - s) / totalPoints) * 255);
+    const gVal = Math.round(((totalPoints - f - s) / totalPoints) * 255);
+    const bVal = Math.round(((totalPoints - f - h) / totalPoints) * 255);
+    return "#" + ((1 << 24) + (rVal << 16) + (gVal << 8) + bVal).toString(16).slice(1);
+}
