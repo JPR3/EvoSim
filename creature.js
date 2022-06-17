@@ -27,15 +27,42 @@ class Organism{
 }
 
 class Plant extends Organism{
-    constructor(x, y, radius, color, energy){
+    constructor(x, y, radius, color, energy, cluster){
         super(x,y,radius,color, energy, 0);
+        if(cluster === undefined || cluster === null){
+            this.cluster = [this]
+        }
+        else{
+            this.cluster = cluster;
+        }
+        this.gSteps = 0; //Counts steps between growths
+        this.cooldown = 500; //Minimum time between growths
+    }
+    update(){
+        this.gSteps += 1;
+        if(this.gSteps >= this.cooldown && this.cluster[0] === this && Math.floor(Math.random() * 100) == 1){
+            //Grow a copy of the plant tangent to the original
+            this.gSteps = 0;
+            const gp = this.cluster[Math.floor(Math.random() * this.cluster.length)];
+            const angle = Math.random() * Math.PI * 2
+            const newPl = new Plant(gp.x + (2 * gp.radius * Math.cos(angle)), gp.y + (2 * gp.radius * Math.sin(angle)),
+                gp.radius, gp.color, gp.energy, gp.cluster)
+            organisms.push(newPl)
+            this.cluster.push(newPl);
+        }
+        this.draw();
+    }
+    kill(){
+        super.kill();
+        //console.log(this.cluster)
+        this.cluster.splice(this.cluster.indexOf(this), 1);
     }
 }
 
 class Creature extends Organism{
     constructor(x, y, radius, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent){
         super(x,y,radius,calcColor(speed, health, ferocity), energy, ferocity);
-        console.log("My color is " + this.color)
+        //console.log("My color is " + this.color)
         //Generate a random angle
         this.angle = Math.random() * Math.PI * 2
         this.targetAngle = this.angle;
