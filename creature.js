@@ -72,6 +72,7 @@ class Creature extends Organism{
         };
         this.target = null;
         this.speed = speed;
+        this.maxHealth = health;
         this.health = health;
         this.eThresh = eThresh; //Energy threshold for creating child
         this.fThresh = fThresh; //Ferocity threshold to avoid attacking
@@ -93,7 +94,7 @@ class Creature extends Organism{
         }
         for(let i in orgs){
             let dist = Math.hypot(this.x - orgs[i].x, this.y - orgs[i].y);
-            if(this.family.indexOf(orgs[i]) === -1 && orgs[i].ferocity < this.fThresh && dist < this.dThresh && dist < closest.distance){
+            if(this.family.indexOf(orgs[i]) === -1 && (orgs[i].ferocity < this.fThresh || orgs[i] instanceof Plant) && dist < this.dThresh && dist < closest.distance){
                 closest = {
                     distance: dist,
                     org: orgs[i]
@@ -116,11 +117,10 @@ class Creature extends Organism{
             this.steps = 0;
             let child;
             if(Math.trunc(Math.random() * 25) === 18){
-                console.log("Mutating")
                 child = this.generateMutation(Math.trunc(Math.random() * 8));
             }
             else{
-                child = new Creature(this.x, this.y, 10, this.hThresh, this.speed, this.health, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
+                child = new Creature(this.x, this.y, 10, this.hThresh, this.speed, this.maxHealth, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
             }
             this.family.push(child);
             organisms.push(child);
@@ -135,12 +135,37 @@ class Creature extends Organism{
             //Check for touching a target
             const dist = Math.hypot(this.x - this.target.x, this.y - this.target.y);
             if(dist - this.target.radius - this.radius < 1){
-                this.energy += this.target.energy;
-                this.target.kill();
+                //Creature interactions
+                if(this.target instanceof Plant || this.ferocity >= this.target.health){
+                    if(!this.target instanceof Plant){
+                        console.log("Attacker killed prey");
+                    }
+                    
+                    this.energy += this.target.energy;
+                    this.target.kill();
+                }
+                else{
+                    this.target.health -= this.ferocity;
+                    if(this.ferocity >= this.target.ferocity){
+                        console.log("Attacker wounded prey");
+                    }
+                    else if(this.health > this.target.ferocity){
+                        console.log("Prey wounded attacker");
+                        this.health -= this.target.ferocity;
+                    }
+                    else{
+                        console.log("Prey killed attacker (what an idiot!)");
+                        this.target.energy += this.energy;
+                        this.kill();
+                        return;
+                    }
+                    let orgs = [...organisms];
+                    orgs.splice(orgs.indexOf(this.target), 1);
+                    this.findTarget(orgs);
+                }
             }
             //Check for chasing target too long
             else if(Date.now() - this.targetedAt > 10000 && organisms.length > 1){
-                console.log("Switching targets");
                 let orgs = [...organisms];
                 orgs.splice(orgs.indexOf(this.target), 1);
                 this.findTarget(orgs);
@@ -263,7 +288,7 @@ class Creature extends Organism{
     generateMutation(num){
         let l_ferocity = this.ferocity;
         let l_speed = this.speed;
-        let l_health = this.health;
+        let l_health = this.maxHealth;
         let l_eThresh = this.eThresh; 
         let l_fThresh = this.fThresh;
         let l_dThresh = this.dThresh; 
@@ -274,7 +299,7 @@ class Creature extends Organism{
                 l_speed = randRange(this.speed, .25);
                 break;
             case 1:
-                l_health = randRange(this.health, 5);
+                l_health = randRange(this.maxHealth, 5);
                 break;
             case 2:
                 l_ferocity = randRange(this.ferocity, 5);
