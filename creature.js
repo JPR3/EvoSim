@@ -47,14 +47,13 @@ class Plant extends Organism{
             const angle = Math.random() * Math.PI * 2
             const newPl = new Plant(gp.x + (2 * gp.radius * Math.cos(angle)), gp.y + (2 * gp.radius * Math.sin(angle)),
                 gp.radius, gp.color, gp.energy, gp.cluster)
-            organisms.push(newPl)
+            organisms.push(newPl);
             this.cluster.push(newPl);
         }
         this.draw();
     }
     kill(){
         super.kill();
-        //console.log(this.cluster)
         this.cluster.splice(this.cluster.indexOf(this), 1);
     }
 }

@@ -1,6 +1,10 @@
 /* 
     Plans:
-    Check type of cluster before splicing
+    Creature interactions
+    Attribute costs
+    Pause and see org stats
+    Graphs
+    Change sim attributes
 */
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
