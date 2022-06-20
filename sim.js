@@ -2,14 +2,16 @@
     Plans:
     Attribute costs
     Pause and see org stats
+        -Relevant stats array (of string keys), loop through, get variables by key and print to log
     Graphs
     Change sim attributes
 */
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-
 canvas.width = innerWidth;
 canvas.height = innerHeight;
+const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
+let run = true;
 function randRange(middle, deviation){
     const numStr = String(deviation);
     let multNum = 1;
@@ -34,20 +36,40 @@ for(let i = 0; i < 100; i++){
 }
 function animate(){
     requestAnimationFrame(animate);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    organisms.forEach(org => {
-        org.update();
-    });
-
-    if(Math.trunc(Math.random() * 150) === 17){
-        pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 15, 'green', 100);
-        organisms.push(pl1)
+    if(run){
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        organisms.forEach(org => {
+            org.update();
+        });
+        if(Math.trunc(Math.random() * 150) === 17){
+            pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 15, 'green', 100);
+            organisms.push(pl1)
+        }
     }
-    
 }
 addEventListener('click', (event) => {
-    plnt = new Plant(event.clientX, event.clientY, 15, 'green', 100);
-    organisms.push(plnt);
+    if(run){
+        plnt = new Plant(event.clientX, event.clientY, 15, 'green', 100);
+        organisms.push(plnt);
+    }
+    else{
+        for(let i in organisms){
+            if(organisms[i] instanceof Creature){
+                let dist = Math.hypot(event.clientX - organisms[i].x, event.clientY - organisms[i].y);
+                if(dist <= organisms[i].radius){
+                    console.log("Testing this out: " + organisms[i]["ferocity"])
+                    for(let j in trackedValues){
+                        console.log(trackedValues[j] + ": " + organisms[i][trackedValues[j]]);
+                    }
+                }
+            }
+        }
+    }
 })
+addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+        run = !run;
+    }
+  })
 animate();
