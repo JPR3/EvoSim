@@ -1,15 +1,19 @@
 /* 
     Plans:
     Attribute costs
-    Pause and see org stats
-        -Relevant stats array (of string keys), loop through, get variables by key and print to log
     Graphs
     Change sim attributes
+    Make page work at 100% zoom lmao
 */
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+const fGraph = document.getElementById("fGraph");
+const hGraph = document.getElementById("hGraph");
+const sGraph = document.getElementById("sGraph");
+const pieGraph = document.getElementById("pieGraph");
+const graphs = [fGraph, hGraph, sGraph, pieGraph];
+updateScaling();
+
 const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
 let run = true;
 function randRange(middle, deviation){
@@ -48,6 +52,14 @@ function animate(){
         }
     }
 }
+function updateScaling(){
+    canvas.width = innerWidth * .8;
+    canvas.height = innerHeight;
+    for(let i in graphs){
+        graphs[i].width = innerWidth * .2;
+        graphs[i].height = innerHeight / 4;
+    }
+}
 addEventListener('click', (event) => {
     if(run){
         plnt = new Plant(event.clientX, event.clientY, 15, 'green', 100);
@@ -71,5 +83,10 @@ addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
         run = !run;
     }
-  })
+  });
+
+window.addEventListener('resize',function(){
+    updateScaling();
+},false);
+
 animate();
