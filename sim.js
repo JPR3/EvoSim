@@ -2,16 +2,12 @@
     Plans:
     Attribute costs
     Graphs
+        No more for loop
     Change sim attributes
     Make page work at 100% zoom lmao
 */
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-const fGraph = document.getElementById("fGraph");
-const hGraph = document.getElementById("hGraph");
-const sGraph = document.getElementById("sGraph");
-const pieGraph = document.getElementById("pieGraph");
-const graphs = [fGraph, hGraph, sGraph, pieGraph];
 updateScaling();
 
 const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
@@ -38,8 +34,28 @@ for(let i = 0; i < 100; i++){
     }
     organisms.push(cre1);
 }
+let update = true;
 function animate(){
     requestAnimationFrame(animate);
+    if(update){
+        update = false;
+        delay(1000).then(() => {
+            let numCreatures = 0;
+            let fTotal = 0;
+            let hTotal = 0;
+            let sTotal = 0;
+            for(i in organisms){
+                if(organisms[i] instanceof Creature){
+                    numCreatures++;
+                    fTotal += organisms[i].ferocity;
+                    hTotal += organisms[i].health;
+                    sTotal += organisms[i].speed;
+                }
+            }
+            updateGraphs([fTotal / numCreatures, hTotal / numCreatures, sTotal / numCreatures])
+            update = true;
+        });
+    }
     if(run){
         ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -58,8 +74,14 @@ function updateScaling(){
     for(let i in graphs){
         graphs[i].width = innerWidth * .2;
         graphs[i].height = innerHeight / 4;
+        console.log("Graph should be " + innerWidth * .2 + " by " + innerHeight / 4)
     }
 }
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+  
+  
 addEventListener('click', (event) => {
     if(run){
         plnt = new Plant(event.clientX, event.clientY, 15, 'green', 100);

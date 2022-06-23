@@ -16,23 +16,42 @@
             top: 0; right: 0; bottom: 0; left: 0;
         }
         .graph{
+            display: flex;
+            height: 25vh;
+            width: 100%;
+        }
+        #graphsHolder{
+            height: 100%;
+            width: 20%;
+            display: flex;
             flex-direction: column;
+            justify-content: center;
         }
     </style>
     <div id="content">
         <canvas id="simPlane"></canvas>
-        
-        <div id="graphs">
-            <canvas id="fGraph" class="graph"></canvas>
-            <canvas id="hGraph" class="graph"></canvas>
-            <canvas id="sGraph" class="graph"></canvas>
-            <canvas id="pieGraph" class="graph"></canvas>
+        <div id="graphsHolder">
+            <div class="graph">
+                <canvas id="fGraph"></canvas>
+            </div>
+            <div class="graph">
+                <canvas id="hGraph"></canvas>
+            </div>
+            <div class="graph">
+                <canvas id="sGraph"></canvas>
+            </div>
+            <div class="graph">
+                <canvas id="pieGraph"></canvas>
+            </div>
         </div>
+            
     </div>
     
         
     <script src="creature.js"></script>
+    <script src="grapher.js"></script>
     <script src="sim.js"></script>
+    
     
     
 </body>
