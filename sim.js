@@ -40,19 +40,12 @@ function animate(){
     if(update){
         update = false;
         delay(1000).then(() => {
-            let numCreatures = 0;
-            let fTotal = 0;
-            let hTotal = 0;
-            let sTotal = 0;
-            for(i in organisms){
-                if(organisms[i] instanceof Creature){
-                    numCreatures++;
-                    fTotal += organisms[i].ferocity;
-                    hTotal += organisms[i].health;
-                    sTotal += organisms[i].speed;
-                }
-            }
-            updateGraphs([fTotal / numCreatures, hTotal / numCreatures, sTotal / numCreatures])
+            // updateGraphs([fTotal / numCreatures, hTotal / numCreatures, sTotal / numCreatures])
+            updateGraphs({
+                fAvg: fTotal / numCreatures,
+                hAvg: hTotal / numCreatures,
+                sAvg: sTotal / numCreatures
+            })
             update = true;
         });
     }

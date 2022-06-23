@@ -1,3 +1,7 @@
+let numCreatures = 0;
+let fTotal = 0;
+let hTotal = 0;
+let sTotal = 0;
 class Organism{
     constructor(x, y, radius, color, energy, ferocity){
         this.x = x;
@@ -85,6 +89,10 @@ class Creature extends Organism{
         if(parent != null){
             this.family.push(parent);
         }
+        numCreatures++;
+        fTotal += ferocity;
+        hTotal += health;
+        sTotal += speed;
     }
     findTarget(orgs){
         orgs.splice(orgs.indexOf(this), 1);
@@ -324,6 +332,13 @@ class Creature extends Organism{
                 break;
         }
         return new Creature(this.x, this.y, 10, this.hThresh, l_speed, l_health, l_ferocity, l_eThresh, l_fThresh, l_dThresh, l_sThresh, l_hThresh, this);
+    }
+    kill(){
+        super.kill();
+        numCreatures--;
+        fTotal -= this.ferocity;
+        hTotal -= this.health;
+        sTotal -= this.speed;
     }
 }
 function roundToTwo(num) {

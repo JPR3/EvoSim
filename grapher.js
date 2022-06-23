@@ -11,16 +11,18 @@ let ferocityData = [];
 let healthData = [];
 let speedData = [];
 function updateGraphs(averages){
-    //Make this better
-    ferocityData.push(averages[0]);
+    ferocityData.push(averages.fAvg);
     ferocityChart.data.labels.push("")
-    ferocityChart.options.plugins.title.text = "Ferocity: " + averages[0];
-    healthData.push(averages[1]);
+    ferocityChart.options.plugins.title.text = "Ferocity: " + roundToTwo(averages.fAvg);
+
+    healthData.push(averages.hAvg);
     healthChart.data.labels.push("");
-    healthChart.options.plugins.title.text = "Health: " + averages[1];
-    speedData.push(averages[2]);
+    healthChart.options.plugins.title.text = "Health: " + roundToTwo(averages.hAvg);
+
+    speedData.push(averages.sAvg);
     speedChart.data.labels.push("");
-    speedChart.options.plugins.title.text = "Speed: " + averages[2];
+    speedChart.options.plugins.title.text = "Speed: " + roundToTwo(averages.sAvg);
+
     ferocityChart.update();
     healthChart.update();
     speedChart.update();
