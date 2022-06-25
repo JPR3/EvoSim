@@ -3,8 +3,6 @@
     Fix the lag bug
     Things spawn underneath the graphs
     Attribute costs
-    Graphs
-        Limit amount of data being stored
     Change sim attributes
     Make page work at 100% zoom lmao
         How to determine width of what page would be at 100% zoom?
@@ -70,9 +68,7 @@ function updateScaling(){
     for(let i in graphs){
         graphs[i].width = innerWidth * .2;
         graphs[i].height = innerHeight / 4;
-        console.log("Graph should be " + innerWidth * .2 + " by " + innerHeight / 4)
     }
-    console.log("Zoom:" + window.visualViewport.width)
 }
 function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -89,7 +85,6 @@ addEventListener('click', (event) => {
             if(organisms[i] instanceof Creature){
                 let dist = Math.hypot(event.clientX - organisms[i].x, event.clientY - organisms[i].y);
                 if(dist <= organisms[i].radius){
-                    console.log("Testing this out: " + organisms[i]["ferocity"])
                     for(let j in trackedValues){
                         console.log(trackedValues[j] + ": " + organisms[i][trackedValues[j]]);
                     }

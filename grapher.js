@@ -6,21 +6,21 @@ const graphs = [fGraph, hGraph, sGraph, pieGraph];
 const fGraphChart = document.getElementById("fGraph").getContext("2d");
 const hGraphChart = document.getElementById("hGraph").getContext("2d");
 const sGraphChart = document.getElementById("sGraph").getContext("2d");
+
 const pieGraphChart = document.getElementById("pieGraph").getContext("2d");
-let ferocityData = [];
-let healthData = [];
-let speedData = [];
+let dataLength = 0;
 let pieData = [1, 1, 1];
 function updateGraphs(averages){
-    ferocityData.push(averages.fAvg);
+    dataLength++;
+    ferocityChart.data.datasets[0].data.push(averages.fAvg);
     ferocityChart.data.labels.push("")
     ferocityChart.options.plugins.title.text = "Ferocity: " + roundToTwo(averages.fAvg);
 
-    healthData.push(averages.hAvg);
+    healthChart.data.datasets[0].data.push(averages.hAvg);
     healthChart.data.labels.push("");
     healthChart.options.plugins.title.text = "Health: " + roundToTwo(averages.hAvg);
 
-    speedData.push(averages.sAvg);
+    speedChart.data.datasets[0].data.push(averages.sAvg);
     speedChart.data.labels.push("");
     speedChart.options.plugins.title.text = "Speed: " + roundToTwo(averages.sAvg);
 
@@ -30,6 +30,16 @@ function updateGraphs(averages){
     h = roundToTwo(h * 7.5);
     s = roundToTwo(s * 100);
     pieChart.data.datasets[0].data = [f, h, s];
+    //Condense graph data if necessary
+    console.log(ferocityChart.data.datasets[0].data.length)
+    if(dataLength >= 50){
+        console.log("condensing")
+        dataLength = Math.round(dataLength / 2);
+        for(let i = 0; i < 3; i++){
+            lineCharts[i].data.datasets[0].data = condenseList(lineCharts[i].data.datasets[0].data);
+            lineCharts[i].data.labels = Array(lineCharts[i].data.datasets[0].data.length).fill("");
+        }
+    }
     ferocityChart.update();
     healthChart.update();
     speedChart.update();
@@ -43,7 +53,7 @@ let ferocityChart = new Chart(fGraphChart, {
         label:"Ferocity",
         datasets:[{
             label:"Ferocity",
-            data:ferocityData,
+            data:[],
             fill: true,
             backgroundColor:"#872020"
         }]        
@@ -60,7 +70,7 @@ let ferocityChart = new Chart(fGraphChart, {
         },
         responsive: true,
         maintainAspectRatio: false
-        
+
     }
 })
 let healthChart = new Chart(hGraphChart, {
@@ -70,7 +80,7 @@ let healthChart = new Chart(hGraphChart, {
         label:"Health",
         datasets:[{
             label:"Health",
-            data:healthData,
+            data:[],
             fill: true,
             backgroundColor:"#2a802b"
         }]        
@@ -97,7 +107,7 @@ let speedChart = new Chart(sGraphChart, {
         label:"Speed",
         datasets:[{
             label:"Speed",
-            data:speedData,
+            data:[],
             fill: true,
             backgroundColor:"#14199c"
         }]        
@@ -117,6 +127,7 @@ let speedChart = new Chart(sGraphChart, {
         
     }
 })
+const lineCharts = [ferocityChart, healthChart, speedChart];
 let pieChart = new Chart(pieGraphChart, {
     type:"pie",
     data:{
@@ -152,3 +163,15 @@ let pieChart = new Chart(pieGraphChart, {
         
     }
 })
+function condenseList(list){
+    newList = []
+    for(let i = 0; i < list.length; i += 2){
+        if(i + 1 >= list.length){
+            newList.push(list[i])
+        }
+        else{
+            newList.push((list[i] + list[i+1]) / 2)
+        }
+    }
+    return newList;
+}

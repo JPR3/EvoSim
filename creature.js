@@ -65,7 +65,6 @@ class Plant extends Organism{
 class Creature extends Organism{
     constructor(x, y, radius, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent){
         super(x,y,radius,calcColor(speed, health, ferocity), energy, ferocity);
-        //console.log("My color is " + this.color)
         //Generate a random angle
         this.angle = Math.random() * Math.PI * 2
         this.targetAngle = this.angle;
@@ -146,23 +145,16 @@ class Creature extends Organism{
                 //Creature interactions
                 if(this.target instanceof Plant || this.ferocity >= this.target.health){
                     if(!this.target instanceof Plant){
-                        console.log("Attacker killed prey");
                     }
-                    
                     this.energy += this.target.energy;
                     this.target.kill();
                 }
                 else{
                     this.target.health -= this.ferocity;
-                    if(this.ferocity >= this.target.ferocity){
-                        console.log("Attacker wounded prey");
-                    }
-                    else if(this.health > this.target.ferocity){
-                        console.log("Prey wounded attacker");
+                    if(this.health > this.target.ferocity){
                         this.health -= this.target.ferocity;
                     }
                     else{
-                        console.log("Prey killed attacker (what an idiot!)");
                         this.target.energy += this.energy;
                         this.kill();
                         return;
@@ -328,7 +320,6 @@ class Creature extends Organism{
                 l_hThresh = randRange(this.hThresh, 25);
                 break;
             default:
-                console.log("Invalid mutation input")
                 break;
         }
         return new Creature(this.x, this.y, this.radius, this.hThresh, l_speed, l_health, l_ferocity, l_eThresh, l_fThresh, l_dThresh, l_sThresh, l_hThresh, this);
