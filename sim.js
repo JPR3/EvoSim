@@ -1,7 +1,10 @@
 /* 
     Plans:
+    Fix the lag bug
+    Things spawn underneath the graphs
     Attribute costs
     Graphs
+        Limit amount of data being stored
     Change sim attributes
     Make page work at 100% zoom lmao
         How to determine width of what page would be at 100% zoom?

@@ -10,6 +10,7 @@ const pieGraphChart = document.getElementById("pieGraph").getContext("2d");
 let ferocityData = [];
 let healthData = [];
 let speedData = [];
+let pieData = [1, 1, 1];
 function updateGraphs(averages){
     ferocityData.push(averages.fAvg);
     ferocityChart.data.labels.push("")
@@ -23,9 +24,16 @@ function updateGraphs(averages){
     speedChart.data.labels.push("");
     speedChart.options.plugins.title.text = "Speed: " + roundToTwo(averages.sAvg);
 
+    //Convert averages into relative values
+    let [f, h, s] = Object.values(averages)
+    f = roundToTwo(f * 6);
+    h = roundToTwo(h * 7.5);
+    s = roundToTwo(s * 100);
+    pieChart.data.datasets[0].data = [f, h, s];
     ferocityChart.update();
     healthChart.update();
     speedChart.update();
+    pieChart.update();
 }
 
 let ferocityChart = new Chart(fGraphChart, {
@@ -101,6 +109,41 @@ let speedChart = new Chart(sGraphChart, {
             },
             title:{
                 display: true,
+                text: ""
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false
+        
+    }
+})
+let pieChart = new Chart(pieGraphChart, {
+    type:"pie",
+    data:{
+        labels:[
+            "Ferocity",
+            "Health",
+            "Speed"
+        ],
+        label:"Distribution",
+        datasets:[{
+            label:"Distribution",
+            data:pieData,
+            fill: true,
+            backgroundColor:[
+                "#872020",
+                "#2a802b",
+                "#14199c"
+            ]
+        }]        
+    },
+    options:{
+        plugins: {
+            legend: {
+                display: true
+            },
+            title:{
+                display: false,
                 text: ""
             }
         },
