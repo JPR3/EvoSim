@@ -2,14 +2,14 @@
     Plans:
     Attribute costs
     Graphs
-        No more for loop
     Change sim attributes
     Make page work at 100% zoom lmao
+        How to determine width of what page would be at 100% zoom?
+        It probably won't work on other screen sizes but I'll fix it later
 */
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 updateScaling();
-
 const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
 let run = true;
 function randRange(middle, deviation){
@@ -26,10 +26,10 @@ let organisms = []
 for(let i = 0; i < 100; i++){
     //x, y, radius, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent
     //cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 200, 1, 20, 25, 125, 30, 1000, 1750, 150);
-    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, randRange(200, 25), randRange(1.5, .5), 
+    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 3 * (window.visualViewport.width / 1260), randRange(200, 25), randRange(1.5, .5), 
         randRange(20, 10), randRange(25, 5), randRange(125, 50), randRange(30, 10), randRange(1000, 200), randRange(1750, 500), randRange(150, 50));
     if(i % 4 != 3){
-        pl1 = new Plant(Math.random() * (canvas.width - canvas.width / 4.5) + canvas.width / 9, Math.random() * (canvas.height - canvas.height / 4.5) + canvas.height / 9, 15, 'green', 100);
+        pl1 = new Plant(Math.random() * (canvas.width - canvas.width / 4.5) + canvas.width / 9, Math.random() * (canvas.height - canvas.height / 4.5) + canvas.height / 9, 5 * (window.visualViewport.width / 1260), 'green', 100);
         organisms.push(pl1);
     }
     organisms.push(cre1);
@@ -56,7 +56,7 @@ function animate(){
             org.update();
         });
         if(Math.trunc(Math.random() * 150) === 17){
-            pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 15, 'green', 100);
+            pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 5 * (window.visualViewport.width / 1260), 'green', 100);
             organisms.push(pl1)
         }
     }
@@ -69,6 +69,7 @@ function updateScaling(){
         graphs[i].height = innerHeight / 4;
         console.log("Graph should be " + innerWidth * .2 + " by " + innerHeight / 4)
     }
+    console.log("Zoom:" + window.visualViewport.width)
 }
 function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -77,7 +78,7 @@ function delay(time) {
   
 addEventListener('click', (event) => {
     if(run){
-        plnt = new Plant(event.clientX, event.clientY, 15, 'green', 100);
+        plnt = new Plant(event.clientX, event.clientY, 5 * (window.visualViewport.width / 1260), 'green', 100);
         organisms.push(plnt);
     }
     else{

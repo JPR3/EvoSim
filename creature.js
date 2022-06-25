@@ -128,7 +128,7 @@ class Creature extends Organism{
                 child = this.generateMutation(Math.trunc(Math.random() * 8));
             }
             else{
-                child = new Creature(this.x, this.y, 10, this.hThresh, this.speed, this.maxHealth, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
+                child = new Creature(this.x, this.y, this.radius, this.hThresh, this.speed, this.maxHealth, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
             }
             this.family.push(child);
             organisms.push(child);
@@ -231,8 +231,8 @@ class Creature extends Organism{
             
         }
         //Step
-        this.x = this.x + this.velocity.x * this.speed;
-        this.y = this.y + this.velocity.y * this.speed;
+        this.x = this.x + this.velocity.x * (this.speed * window.visualViewport.width / 3780);
+        this.y = this.y + this.velocity.y * (this.speed * window.visualViewport.width / 3780);
         this.energy -= 0.075
         if(this.energy <= 0){
             this.kill();
@@ -331,7 +331,7 @@ class Creature extends Organism{
                 console.log("Invalid mutation input")
                 break;
         }
-        return new Creature(this.x, this.y, 10, this.hThresh, l_speed, l_health, l_ferocity, l_eThresh, l_fThresh, l_dThresh, l_sThresh, l_hThresh, this);
+        return new Creature(this.x, this.y, this.radius, this.hThresh, l_speed, l_health, l_ferocity, l_eThresh, l_fThresh, l_dThresh, l_sThresh, l_hThresh, this);
     }
     kill(){
         super.kill();
