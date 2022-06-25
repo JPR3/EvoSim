@@ -31,9 +31,7 @@ function updateGraphs(averages){
     s = roundToTwo(s * 100);
     pieChart.data.datasets[0].data = [f, h, s];
     //Condense graph data if necessary
-    console.log(ferocityChart.data.datasets[0].data.length)
     if(dataLength >= 50){
-        console.log("condensing")
         dataLength = Math.round(dataLength / 2);
         for(let i = 0; i < 3; i++){
             lineCharts[i].data.datasets[0].data = condenseList(lineCharts[i].data.datasets[0].data);
@@ -151,11 +149,24 @@ let pieChart = new Chart(pieGraphChart, {
     options:{
         plugins: {
             legend: {
-                display: true
+                display: false
             },
             title:{
-                display: false,
-                text: ""
+                display: true,
+                text: "Average Stat Distribution"
+            },
+            tooltip:{
+                callbacks: {
+                    label: function(context){
+                      var label = context.label,
+                          currentValue = context.raw,
+                          total = context.chart._metasets[context.datasetIndex].total;
+            
+                      var percentage = parseFloat((currentValue/total*100).toFixed(1));
+            
+                      return label + ": " + percentage + '%';
+                    }
+                  }
             }
         },
         responsive: true,
