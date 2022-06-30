@@ -2,6 +2,7 @@ let numCreatures = 0;
 let fTotal = 0;
 let hTotal = 0;
 let sTotal = 0;
+let numPlants = 0;
 class Organism{
     constructor(x, y, radius, color, energy, ferocity){
         this.x = x;
@@ -33,6 +34,7 @@ class Organism{
 class Plant extends Organism{
     constructor(x, y, radius, color, energy, cluster){
         super(x,y,radius,color, energy, 0);
+        numPlants++;
         if(cluster === undefined || cluster === null){
             this.cluster = [this]
         }
@@ -44,7 +46,7 @@ class Plant extends Organism{
     }
     update(){
         this.gSteps += 1;
-        if(this.gSteps >= this.cooldown && this.cluster[0] === this && Math.floor(Math.random() * 100) == 1){
+        if(this.gSteps >= this.cooldown && this.cluster[0] === this && Math.floor(Math.random() * 100) == 1 && numPlants < 500){
             //Grow a copy of the plant tangent to the original
             this.gSteps = 0;
             const gp = this.cluster[Math.floor(Math.random() * this.cluster.length)];
@@ -58,6 +60,7 @@ class Plant extends Organism{
     }
     kill(){
         super.kill();
+        numPlants--;
         this.cluster.splice(this.cluster.indexOf(this), 1);
     }
 }
