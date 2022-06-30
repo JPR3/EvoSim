@@ -127,7 +127,7 @@ class Creature extends Organism{
             this.steps = 0;
             let child;
             if(Math.trunc(Math.random() * 25) === 18){
-                child = this.generateMutation(Math.trunc(Math.random() * 8));
+                child = this.generateMutation();
             }
             else{
                 child = new Creature(this.x, this.y, this.radius, this.hThresh, this.speed, this.maxHealth, this.ferocity, this.eThresh, this.fThresh, this.dThresh, this.sThresh, this.hThresh, this);
@@ -288,7 +288,7 @@ class Creature extends Organism{
     isNearEdge(){
         return this.y - this.radius - 50 < 0 || this.y + this.radius + 50 > canvas.height || this.x - this.radius - 50 < 0 || this.x + this.radius + 50 > canvas.width;
     }
-    generateMutation(num){
+    generateMutation(){
         let l_ferocity = this.ferocity;
         let l_speed = this.speed;
         let l_health = this.maxHealth;
@@ -297,29 +297,31 @@ class Creature extends Organism{
         let l_dThresh = this.dThresh; 
         let l_hThresh = this.hThresh;
         let l_sThresh = this.sThresh;
+        const mainNum = Math.trunc(Math.random() * 3)
+        const num = Math.trunc(Math.random() * 5)
+        if(mainNum == 0){
+            l_speed = randRange(this.speed, .25);
+        }
+        else if(mainNum == 1){
+            l_health = randRange(this.maxHealth, 5);
+        }
+        else{
+            l_ferocity = randRange(this.ferocity, 5);
+        }
         switch(num) {
             case 0:
-                l_speed = randRange(this.speed, .25);
-                break;
-            case 1:
-                l_health = randRange(this.maxHealth, 5);
-                break;
-            case 2:
-                l_ferocity = randRange(this.ferocity, 5);
-                break;
-            case 3:
                 l_eThresh = randRange(this.eThresh, 25);
                 break;
-            case 4:
+            case 1:
                 l_fThresh = randRange(this.fThresh, 5);
                 break;
-            case 5:
+            case 2:
                 l_dThresh = randRange(this.dThresh, 100);
                 break;
-            case 6:
+            case 3:
                 l_sThresh = randRange(this.sThresh, 250);
                 break;
-            case 7:
+            case 4:
                 l_hThresh = randRange(this.hThresh, 25);
                 break;
             default:
