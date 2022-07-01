@@ -3,6 +3,9 @@ let fTotal = 0;
 let hTotal = 0;
 let sTotal = 0;
 let numPlants = 0;
+const fCost = 0.025;
+const hCost = 0.025;
+const sCost = 0.025;
 class Organism{
     constructor(x, y, radius, color, energy, ferocity){
         this.x = x;
@@ -228,7 +231,7 @@ class Creature extends Organism{
         //Step
         this.x = this.x + this.velocity.x * (this.speed * window.visualViewport.width / 3780);
         this.y = this.y + this.velocity.y * (this.speed * window.visualViewport.width / 3780);
-        this.energy -= 0.075
+        this.energy -= ((fCost * (this.ferocity / 25)) + (hCost * (this.health / 20)) + (sCost * (this.speed / 1.5)))
         if(this.energy <= 0){
             this.kill();
         }
