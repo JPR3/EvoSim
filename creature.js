@@ -3,9 +3,9 @@ let fTotal = 0;
 let hTotal = 0;
 let sTotal = 0;
 let numPlants = 0;
-const fCost = 0.025;
-const hCost = 0.025;
-const sCost = 0.025;
+let fCost = 0.025;
+let hCost = 0.025;
+let sCost = 0.025;
 class Organism{
     constructor(x, y, radius, color, energy, ferocity){
         this.x = x;

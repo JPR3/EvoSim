@@ -2,14 +2,24 @@
     Plans:
     Fix the lag bug
     Things spawn underneath the graphs
-    Attribute costs
     Change sim attributes
+        Center settings within canvas
+        Make it look good
+        Able to reset to this screen and start again
     Make page work at 100% zoom lmao
         How to determine width of what page would be at 100% zoom?
         It probably won't work on other screen sizes but I'll fix it later
 */
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
+const startBtn = document.querySelector('#startBtn');
+const settingsEl = document.querySelector('#settingsEl');
+const fSlider = document.querySelector("#fRange");
+const hSlider = document.querySelector("#hRange");
+const sSlider = document.querySelector("#sRange");
+const fDisplay = document.querySelector("#fDisplay");
+const hDisplay = document.querySelector("#hDisplay");
+const sDisplay = document.querySelector("#sDisplay");
 updateScaling();
 const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
 let run = true;
@@ -103,4 +113,22 @@ window.addEventListener('resize',function(){
     updateScaling();
 },false);
 
-animate();
+startBtn.addEventListener('click', () => {
+    fCost = fSlider.value / 1000;
+    hCost = hSlider.value / 1000;
+    sCost = sSlider.value / 1000;
+    console.log(fCost)
+    console.log(hCost)
+    console.log(sCost)
+    animate();
+    settingsEl.style.display = "none"
+})
+fSlider.oninput = function() {
+    fDisplay.innerHTML = this.value;
+}
+hSlider.oninput = function() {
+    hDisplay.innerHTML = this.value;
+}
+sSlider.oninput = function() {
+    sDisplay.innerHTML = this.value;
+}
