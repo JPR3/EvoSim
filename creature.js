@@ -150,21 +150,13 @@ class Creature extends Organism{
             if(dist - this.target.radius - this.radius < 1){
                 //Creature interactions
                 if(this.target instanceof Plant || this.ferocity >= this.target.health){
-                    if(!this.target instanceof Plant){
-                    }
+                    //Attacker clean win
                     this.energy += this.target.energy;
                     this.target.kill();
                 }
                 else{
+                    //Target injured, but no kill
                     this.target.health -= this.ferocity;
-                    if(this.health > this.target.ferocity){
-                        this.health -= this.target.ferocity;
-                    }
-                    else{
-                        this.target.energy += this.energy;
-                        this.kill();
-                        return;
-                    }
                     let orgs = [...organisms];
                     orgs.splice(orgs.indexOf(this.target), 1);
                     this.findTarget(orgs);
@@ -336,7 +328,7 @@ class Creature extends Organism{
         super.kill();
         numCreatures--;
         fTotal -= this.ferocity;
-        hTotal -= this.health;
+        hTotal -= this.maxHealth;
         sTotal -= this.speed;
     }
 }

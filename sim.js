@@ -1,7 +1,7 @@
 /* 
     Plans:
     Fix the lag bug
-    Things spawn underneath the graphs
+    Display creature attributes when clicked
     Change sim attributes
         Center settings within canvas
         Make it look good
