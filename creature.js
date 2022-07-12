@@ -38,7 +38,6 @@ class Organism{
 class Plant extends Organism{
     constructor(x, y, radius, color, cluster){
         super(x,y,radius,color, pEnergy, 0);
-        console.log(pEnergy)
         numPlants++;
         if(cluster === undefined || cluster === null){
             this.cluster = [this]
@@ -165,10 +164,20 @@ class Creature extends Organism{
                 }
             }
             //Check for chasing target too long
-            else if(Date.now() - this.targetedAt > 10000 && organisms.length > 1){
-                let orgs = [...organisms];
-                orgs.splice(orgs.indexOf(this.target), 1);
-                this.findTarget(orgs);
+            else if(Date.now() - this.targetedAt > 7500 && organisms.length > 1){
+                if(this.target instanceof Plant){
+                    //Turn directly at the target
+                    this.angle = this.targetAngle;
+                    this.velocity = {
+                        x: Math.cos(this.angle) * 2,
+                        y: Math.sin(this.angle) * 2
+                    };
+                }
+                else{
+                    let orgs = [...organisms];
+                    orgs.splice(orgs.indexOf(this.target), 1);
+                    this.findTarget(orgs);
+                }
             }
             //Turn towards targets
             else{
