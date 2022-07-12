@@ -1,9 +1,7 @@
 /* 
     Plans:
-    Fix the lag bug
+    Speed up by calling animate again?
     Display creature attributes when clicked
-    Change sim attributes
-        Able to reset to this screen and start again
     Make page work at 100% zoom lmao
         How to determine width of what page would be at 100% zoom?
         It probably won't work on other screen sizes but I'll fix it later
@@ -23,6 +21,7 @@ const pDisplay = document.querySelector("#pDisplay");
 updateScaling();
 const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
 let run = true;
+let pausable = false;
 function randRange(middle, deviation){
     const numStr = String(deviation);
     let multNum = 1;
@@ -48,17 +47,20 @@ function setup(){
     }
 }
 let update = true;
+let animationID
 function animate(){
-    requestAnimationFrame(animate);
+    animationID = requestAnimationFrame(animate);
     if(update && run){
         update = false;
         delay(1000).then(() => {
             // updateGraphs([fTotal / numCreatures, hTotal / numCreatures, sTotal / numCreatures])
-            updateGraphs({
-                fAvg: fTotal / numCreatures,
-                hAvg: hTotal / numCreatures,
-                sAvg: sTotal / numCreatures
-            })
+            if(run){
+                updateGraphs({
+                    fAvg: fTotal / numCreatures,
+                    hAvg: hTotal / numCreatures,
+                    sAvg: sTotal / numCreatures
+                })
+            }
             update = true;
         });
     }
@@ -106,9 +108,34 @@ addEventListener('click', (event) => {
     }
 })
 addEventListener('keydown', (event) => {
-
-    if (event.code === 'Space') {
-        run = !run;
+    if(event.code === "Escape"){
+        cancelAnimationFrame(animationID);
+        run = false;
+        pausable = false;
+        //Clear all values
+        for(let i in organisms){
+            organisms[i].kill();
+        }
+        organisms = [];
+        numCreatures = 0;
+        fTotal = 0;
+        hTotal = 0;
+        sTotal = 0;
+        numPlants = 0;
+        fCost = 0.025;
+        hCost = 0.025;
+        sCost = 0.025;
+        pEnergy = 0;
+        dataLength = 0;
+        pieData = [1, 1, 1];
+        createCharts();
+        //Show settings menu
+        settingsEl.style.display = "flex"
+    }
+    else if (event.code === 'Space') {
+        if(pausable){
+            run = !run;
+        }
     }
   });
 
@@ -121,6 +148,8 @@ startBtn.addEventListener('click', () => {
     hCost = hSlider.value / 1000;
     sCost = sSlider.value / 1000;
     pEnergy = parseInt(pSlider.value);
+    pausable = true;
+    run = true;
     setup();
     animate();
     settingsEl.style.display = "none"

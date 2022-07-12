@@ -6,8 +6,12 @@ const graphs = [fGraph, hGraph, sGraph, pieGraph];
 const fGraphChart = document.getElementById("fGraph").getContext("2d");
 const hGraphChart = document.getElementById("hGraph").getContext("2d");
 const sGraphChart = document.getElementById("sGraph").getContext("2d");
-
 const pieGraphChart = document.getElementById("pieGraph").getContext("2d");
+let ferocityChart;
+let healthChart;
+let speedChart;
+let pieChart;
+const lineCharts = [ferocityChart, healthChart, speedChart];
 let dataLength = 0;
 let pieData = [1, 1, 1];
 function updateGraphs(averages){
@@ -43,137 +47,146 @@ function updateGraphs(averages){
     speedChart.update();
     pieChart.update();
 }
-
-let ferocityChart = new Chart(fGraphChart, {
-    type:"line",
-    data:{
-        labels:[],
-        label:"Ferocity",
-        datasets:[{
+function createCharts(){
+    console.log(typeof ferocityChart)
+    if(typeof ferocityChart !== "undefined"){
+        //Destroy previous charts
+        ferocityChart.destroy();
+        healthChart.destroy();
+        speedChart.destroy();
+        pieChart.destroy();
+    }
+    ferocityChart = new Chart(fGraphChart, {
+        type:"line",
+        data:{
+            labels:[],
             label:"Ferocity",
-            data:[],
-            fill: true,
-            backgroundColor:"#872020"
-        }]        
-    },
-    options:{
-        plugins: {
-            legend: {
-                display: false
-            },
-            title:{
-                display: true,
-                text: ""
-            }
+            datasets:[{
+                label:"Ferocity",
+                data:[],
+                fill: true,
+                backgroundColor:"#872020"
+            }]        
         },
-        responsive: true,
-        maintainAspectRatio: false
-
-    }
-})
-let healthChart = new Chart(hGraphChart, {
-    type:"line",
-    data:{
-        labels:[],
-        label:"Health",
-        datasets:[{
+        options:{
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title:{
+                    display: true,
+                    text: ""
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+    
+        }
+    })
+    healthChart = new Chart(hGraphChart, {
+        type:"line",
+        data:{
+            labels:[],
             label:"Health",
-            data:[],
-            fill: true,
-            backgroundColor:"#2a802b"
-        }]        
-    },
-    options:{
-        plugins: {
-            legend: {
-                display: false
-            },
-            title:{
-                display: true,
-                text: ""
-            }
+            datasets:[{
+                label:"Health",
+                data:[],
+                fill: true,
+                backgroundColor:"#2a802b"
+            }]        
         },
-        responsive: true,
-        maintainAspectRatio: false
-        
-    }
-})
-let speedChart = new Chart(sGraphChart, {
-    type:"line",
-    data:{
-        labels:[],
-        label:"Speed",
-        datasets:[{
+        options:{
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title:{
+                    display: true,
+                    text: ""
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+            
+        }
+    })
+    speedChart = new Chart(sGraphChart, {
+        type:"line",
+        data:{
+            labels:[],
             label:"Speed",
-            data:[],
-            fill: true,
-            backgroundColor:"#14199c"
-        }]        
-    },
-    options:{
-        plugins: {
-            legend: {
-                display: false
-            },
-            title:{
-                display: true,
-                text: ""
-            }
+            datasets:[{
+                label:"Speed",
+                data:[],
+                fill: true,
+                backgroundColor:"#14199c"
+            }]        
         },
-        responsive: true,
-        maintainAspectRatio: false
-        
-    }
-})
-const lineCharts = [ferocityChart, healthChart, speedChart];
-let pieChart = new Chart(pieGraphChart, {
-    type:"pie",
-    data:{
-        labels:[
-            "Ferocity",
-            "Health",
-            "Speed"
-        ],
-        label:"Distribution",
-        datasets:[{
+        options:{
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title:{
+                    display: true,
+                    text: ""
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+            
+        }
+    })
+    pieChart = new Chart(pieGraphChart, {
+        type:"pie",
+        data:{
+            labels:[
+                "Ferocity",
+                "Health",
+                "Speed"
+            ],
             label:"Distribution",
-            data:pieData,
-            fill: true,
-            backgroundColor:[
-                "#872020",
-                "#2a802b",
-                "#14199c"
-            ]
-        }]        
-    },
-    options:{
-        plugins: {
-            legend: {
-                display: false
-            },
-            title:{
-                display: true,
-                text: "Average Stat Distribution"
-            },
-            tooltip:{
-                callbacks: {
-                    label: function(context){
-                      var label = context.label,
-                          currentValue = context.raw,
-                          total = context.chart._metasets[context.datasetIndex].total;
-            
-                      var percentage = parseFloat((currentValue/total*100).toFixed(1));
-            
-                      return label + ": " + percentage + '%';
-                    }
-                  }
-            }
+            datasets:[{
+                label:"Distribution",
+                data:pieData,
+                fill: true,
+                backgroundColor:[
+                    "#872020",
+                    "#2a802b",
+                    "#14199c"
+                ]
+            }]        
         },
-        responsive: true,
-        maintainAspectRatio: false
-        
-    }
-})
+        options:{
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title:{
+                    display: true,
+                    text: "Average Stat Distribution"
+                },
+                tooltip:{
+                    callbacks: {
+                        label: function(context){
+                          var label = context.label,
+                              currentValue = context.raw,
+                              total = context.chart._metasets[context.datasetIndex].total;
+                
+                          var percentage = parseFloat((currentValue/total*100).toFixed(1));
+                
+                          return label + ": " + percentage + '%';
+                        }
+                      }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+            
+        }
+    })
+}
+createCharts();
 function condenseList(list){
     newList = []
     for(let i = 0; i < list.length; i += 2){
