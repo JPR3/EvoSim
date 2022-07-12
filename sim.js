@@ -3,8 +3,6 @@
     Fix the lag bug
     Display creature attributes when clicked
     Change sim attributes
-        Center settings within canvas
-        Make it look good
         Able to reset to this screen and start again
     Make page work at 100% zoom lmao
         How to determine width of what page would be at 100% zoom?
