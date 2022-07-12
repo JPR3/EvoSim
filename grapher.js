@@ -11,7 +11,6 @@ let ferocityChart;
 let healthChart;
 let speedChart;
 let pieChart;
-const lineCharts = [ferocityChart, healthChart, speedChart];
 let dataLength = 0;
 let pieData = [1, 1, 1];
 function updateGraphs(averages){
@@ -37,6 +36,7 @@ function updateGraphs(averages){
     //Condense graph data if necessary
     if(dataLength >= 50){
         dataLength = Math.round(dataLength / 2);
+        const lineCharts = [ferocityChart, healthChart, speedChart];
         for(let i = 0; i < 3; i++){
             lineCharts[i].data.datasets[0].data = condenseList(lineCharts[i].data.datasets[0].data);
             lineCharts[i].data.labels = Array(lineCharts[i].data.datasets[0].data.length).fill("");
