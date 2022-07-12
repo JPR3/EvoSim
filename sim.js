@@ -17,9 +17,11 @@ const settingsEl = document.querySelector('#settingsEl');
 const fSlider = document.querySelector("#fRange");
 const hSlider = document.querySelector("#hRange");
 const sSlider = document.querySelector("#sRange");
+const pSlider = document.querySelector("#pRange");
 const fDisplay = document.querySelector("#fDisplay");
 const hDisplay = document.querySelector("#hDisplay");
 const sDisplay = document.querySelector("#sDisplay");
+const pDisplay = document.querySelector("#pDisplay");
 updateScaling();
 const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
 let run = true;
@@ -34,16 +36,18 @@ function randRange(middle, deviation){
     return (Math.trunc((Math.random() * deviation * 2) + 1) + middle - deviation) / multNum
 }
 let organisms = []
-for(let i = 0; i < 100; i++){
-    //x, y, radius, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent
-    //cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 200, 1.5, 20, 25, 125, 30, 1000, 1750, 150);
-    cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 3 * (window.visualViewport.width / 1260), randRange(200, 25), randRange(1.5, .5), 
-        randRange(20, 10), randRange(25, 5), randRange(125, 50), randRange(30, 10), randRange(1000, 200), randRange(1750, 500), randRange(150, 50));
-    if(i % 4 != 3){
-        pl1 = new Plant(Math.random() * (canvas.width - canvas.width / 4.5) + canvas.width / 9, Math.random() * (canvas.height - canvas.height / 4.5) + canvas.height / 9, 5 * (window.visualViewport.width / 1260), 'green', 100);
-        organisms.push(pl1);
+function setup(){
+    for(let i = 0; i < 100; i++){
+        //x, y, radius, energy, speed, health, ferocity, eThresh, fThresh, dThresh, sThresh, hThresh, parent
+        //cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 10, 200, 1.5, 20, 25, 125, 30, 1000, 1750, 150);
+        cre1 = new Creature(Math.random() * canvas.width, Math.random() * canvas.height, 3 * (window.visualViewport.width / 1260), randRange(200, 25), randRange(1.5, .5), 
+            randRange(20, 10), randRange(25, 5), randRange(125, 50), randRange(30, 10), randRange(1000, 200), randRange(1750, 500), randRange(150, 50));
+        if(i % 4 != 3){
+            pl1 = new Plant(Math.random() * (canvas.width - canvas.width / 4.5) + canvas.width / 9, Math.random() * (canvas.height - canvas.height / 4.5) + canvas.height / 9, 5 * (window.visualViewport.width / 1260), 'green');
+            organisms.push(pl1);
+        }
+        organisms.push(cre1);
     }
-    organisms.push(cre1);
 }
 let update = true;
 function animate(){
@@ -67,7 +71,7 @@ function animate(){
             org.update();
         });
         if(Math.trunc(Math.random() * 150) === 17){
-            pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 5 * (window.visualViewport.width / 1260), 'green', 100);
+            pl1 = new Plant(Math.random() * canvas.width, Math.random() * canvas.height, 5 * (window.visualViewport.width / 1260), 'green');
             organisms.push(pl1)
         }
     }
@@ -87,7 +91,7 @@ function delay(time) {
   
 addEventListener('click', (event) => {
     if(run){
-        plnt = new Plant(event.clientX, event.clientY, 5 * (window.visualViewport.width / 1260), 'green', 100);
+        plnt = new Plant(event.clientX, event.clientY, 5 * (window.visualViewport.width / 1260), 'green');
         organisms.push(plnt);
     }
     else{
@@ -117,9 +121,8 @@ startBtn.addEventListener('click', () => {
     fCost = fSlider.value / 1000;
     hCost = hSlider.value / 1000;
     sCost = sSlider.value / 1000;
-    console.log(fCost)
-    console.log(hCost)
-    console.log(sCost)
+    pEnergy = parseInt(pSlider.value);
+    setup();
     animate();
     settingsEl.style.display = "none"
 })
@@ -131,4 +134,7 @@ hSlider.oninput = function() {
 }
 sSlider.oninput = function() {
     sDisplay.innerHTML = this.value;
+}
+pSlider.oninput = function() {
+    pDisplay.innerHTML = this.value;
 }

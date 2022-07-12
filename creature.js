@@ -6,6 +6,7 @@ let numPlants = 0;
 let fCost = 0.025;
 let hCost = 0.025;
 let sCost = 0.025;
+let pEnergy = 0;
 class Organism{
     constructor(x, y, radius, color, energy, ferocity){
         this.x = x;
@@ -35,8 +36,9 @@ class Organism{
 }
 
 class Plant extends Organism{
-    constructor(x, y, radius, color, energy, cluster){
-        super(x,y,radius,color, energy, 0);
+    constructor(x, y, radius, color, cluster){
+        super(x,y,radius,color, pEnergy, 0);
+        console.log(pEnergy)
         numPlants++;
         if(cluster === undefined || cluster === null){
             this.cluster = [this]
@@ -55,7 +57,7 @@ class Plant extends Organism{
             const gp = this.cluster[Math.floor(Math.random() * this.cluster.length)];
             const angle = Math.random() * Math.PI * 2
             const newPl = new Plant(gp.x + (2 * gp.radius * Math.cos(angle)), gp.y + (2 * gp.radius * Math.sin(angle)),
-                gp.radius, gp.color, gp.energy, gp.cluster)
+                gp.radius, gp.color, gp.cluster)
             organisms.push(newPl);
             this.cluster.push(newPl);
         }
