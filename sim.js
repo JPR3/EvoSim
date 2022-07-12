@@ -50,7 +50,7 @@ function setup(){
 let update = true;
 function animate(){
     requestAnimationFrame(animate);
-    if(update){
+    if(update && run){
         update = false;
         delay(1000).then(() => {
             // updateGraphs([fTotal / numCreatures, hTotal / numCreatures, sTotal / numCreatures])
@@ -106,6 +106,7 @@ addEventListener('click', (event) => {
     }
 })
 addEventListener('keydown', (event) => {
+
     if (event.code === 'Space') {
         run = !run;
     }
