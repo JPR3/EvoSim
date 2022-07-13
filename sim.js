@@ -2,6 +2,8 @@
     Plans:
     Speed up by calling animate again?
     Display creature attributes when clicked
+        Fill it with stuff
+        Swap sides when shown
     Make page work at 100% zoom lmao
         How to determine width of what page would be at 100% zoom?
         It probably won't work on other screen sizes but I'll fix it later
@@ -18,6 +20,9 @@ const fDisplay = document.querySelector("#fDisplay");
 const hDisplay = document.querySelector("#hDisplay");
 const sDisplay = document.querySelector("#sDisplay");
 const pDisplay = document.querySelector("#pDisplay");
+const descEl = document.querySelector("#descriptionEl");
+const descTexts = document.querySelectorAll(".descText");
+descEl.style.display = "none"
 updateScaling();
 const trackedValues = ["energy", "speed", "health", "ferocity", "eThresh", "fThresh", "dThresh", "sThresh", "hThresh"];
 let run = true;
@@ -99,9 +104,11 @@ addEventListener('click', (event) => {
             if(organisms[i] instanceof Creature){
                 let dist = Math.hypot(event.clientX - organisms[i].x, event.clientY - organisms[i].y);
                 if(dist <= organisms[i].radius){
-                    for(let j in trackedValues){
-                        console.log(trackedValues[j] + ": " + organisms[i][trackedValues[j]]);
+                    for(let j = 0; j < 9; j++){
+                        const htmlText = descTexts[j].innerHTML;
+                        descTexts[j].innerHTML = htmlText.substring(0, htmlText.indexOf(":") + 1) + " " + roundToTwo(organisms[i][trackedValues[j]])
                     }
+                    descEl.style.display = "flex"
                 }
             }
         }
@@ -135,6 +142,10 @@ addEventListener('keydown', (event) => {
     else if (event.code === 'Space') {
         if(pausable){
             run = !run;
+            if(run){
+                descEl.style.display = "none"
+            }
+            
         }
     }
   });
@@ -152,6 +163,7 @@ startBtn.addEventListener('click', () => {
     run = true;
     setup();
     animate();
+    descEl.style.display = "none"
     settingsEl.style.display = "none"
 })
 fSlider.oninput = function() {

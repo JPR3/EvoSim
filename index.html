@@ -31,6 +31,16 @@
             flex-direction: column;
             justify-content: center;
         }
+        #descBackground{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #303134;
+        }
+        .descText{
+            color: #ffffff;
+            opacity: 1;
+        }
         .slidecontainer {
             width: 100%;
             display: flex;
@@ -76,6 +86,19 @@
     </style>
     
     <div id="content">
+        <div class="fixed h-screen flex items-top w-4/5" id="descriptionEl">
+            <div class="max-w-md h-2/4 w-1/5 text-center border-x-2 border-black opacity-70" id="descBackground">
+                <h1 class="descText pt-2">Energy: XXX.XX</h1>
+                <h1 class="descText">Speed: X.X</h1>
+                <h1 class="descText">Health: XX</h1>
+                <h1 class="descText">Ferocity: XX</h1>
+                <h1 class="descText">Energy to Reproduce: XX</h1>
+                <h1 class="descText">Ferocity Threshold: XX</h1>
+                <h1 class="descText">Targeting Distance: XX</h1>
+                <h1 class="descText">Reproduction Steps: XXXX</h1>
+                <h1 class="descText pb-6">Hunger Threshold: XXX</h1>
+            </div>
+        </div>
         <div class="fixed inset-0 flex items-center justify-center" id="settingsEl">
             <div class="bg-gray-500 max-w-md w-full p-6 rounded-lg">
                 <h1 class="mb-1">Ferocity Cost:</h1>
@@ -103,6 +126,7 @@
                 </div>
             </div>
         </div>
+        
         <canvas></canvas>
         <div id="graphsHolder">
             <div class="graph">
