@@ -1,13 +1,3 @@
-/* 
-    Plans:
-    Speed up by calling animate again?
-    Display creature attributes when clicked
-        Fill it with stuff
-        Swap sides when shown
-    Make page work at 100% zoom lmao
-        How to determine width of what page would be at 100% zoom?
-        It probably won't work on other screen sizes but I'll fix it later
-*/
 const ctx = canvas.getContext('2d');
 const startBtn = document.querySelector('#startBtn');
 const settingsEl = document.querySelector('#settingsEl');
