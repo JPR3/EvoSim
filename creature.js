@@ -7,6 +7,7 @@ let fCost = 0.025;
 let hCost = 0.025;
 let sCost = 0.025;
 let pEnergy = 0;
+const canvas = document.querySelector('canvas');
 class Organism{
     constructor(x, y, radius, color, energy, ferocity){
         this.x = x;

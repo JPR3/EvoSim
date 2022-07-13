@@ -8,7 +8,6 @@
         How to determine width of what page would be at 100% zoom?
         It probably won't work on other screen sizes but I'll fix it later
 */
-const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const startBtn = document.querySelector('#startBtn');
 const settingsEl = document.querySelector('#settingsEl');
@@ -96,8 +95,10 @@ function delay(time) {
   
 addEventListener('click', (event) => {
     if(run){
-        plnt = new Plant(event.clientX, event.clientY, 5 * (window.visualViewport.width / 1260), 'green');
-        organisms.push(plnt);
+        if(event.clientX >= 0 && event.clientX < canvas.width){
+            plnt = new Plant(event.clientX, event.clientY, 5 * (window.visualViewport.width / 1260), 'green');
+            organisms.push(plnt);
+        }
     }
     else{
         for(let i in organisms){
